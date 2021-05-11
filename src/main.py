@@ -1,7 +1,9 @@
 import time
+import json
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.webdriver import ActionChains
 
 def open_driver(url: str):
@@ -13,8 +15,17 @@ def open_driver(url: str):
 
     # Defining firefox webdriver
     options = Options()
-    # options.add_argument('--headless')
-    driver = webdriver.Firefox(executable_path='/lib/geckodriver-v0.27.0-linux64/geckodriver', options=options)
+    options.add_argument('--headless')
+
+    profile = FirefoxProfile()
+    profile.set_preference("browser.download.dir", "/home/jaak/Documents/Programming/qteam_scraper/data/")
+    profile.set_preference("browser.download.folderList", 2)
+    profile.set_preference("browser.helperApps.alwaysAsk.force", False)
+    profile.set_preference("browser.download.manager.showWhenStarting", False)
+    profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/vnd.ms-excel")
+
+
+    driver = webdriver.Firefox(executable_path='/lib/geckodriver-v0.27.0-linux64/geckodriver', options=options, firefox_profile=profile)
     driver.get(url)
 
     return driver
@@ -57,7 +68,7 @@ def click(driver: WebDriver, xpath: str):
     """
     wait_for_element_to_load(driver, xpath)
     print('click', xpath)
-    time.sleep(2)
+    time.sleep(2) # Time doesn't matter -> sleep for safety
     driver.find_element_by_xpath(xpath).click()
 
 def double_click(driver: WebDriver, xpath: str):
@@ -71,7 +82,7 @@ def double_click(driver: WebDriver, xpath: str):
     print('doubleclick', xpath)
     source = driver.find_element_by_xpath(xpath)
     action = ActionChains(driver)
-    time.sleep(2)
+    time.sleep(2) # Time doesn't matter -> sleep for safety
     action.double_click(source).perform()
 
 def download_excel(driver: WebDriver):
@@ -87,7 +98,9 @@ def download_excel(driver: WebDriver):
     xpath_next_page = '//*[@id="IconImg_ListingURE_goForwardButton"]'
     xpath_overzicht_vloot_banden = '//*[@id="ListingURE_listColumn_0_0_1"]'
     xpath_run_query = '//*[@id="theBttnpromptsOKButton"]'
-    xpath_save_as_excel2007 = '//*[@id="saveDocComputerMenu_span_text_saveXLSX"]'
+    xpath_document_actions = '//*[@id="IconImg_Txt_iconMenu_icon_docMenu"]'
+    xpath_save_to_computer_as = '//*[@id="iconMenu_menu_docMenu_span_text_saveDocComputerAs"]'
+    xpath_save_as_excel = '//*[@id="saveDocComputerMenu_span_text_saveXLS"]'
 
     # New window gets opened and old one closed -> switch to new window
     driver.switch_to.window(driver.window_handles[0])
@@ -98,25 +111,35 @@ def download_excel(driver: WebDriver):
 
     click(driver, xpath_document_list)
 
+    wait_for_element_to_load(driver, '//*[@id="dataFrame"]')
+    driver.switch_to.frame('dataFrame')
+    wait_for_element_to_load(driver, '//*[@id="workspaceFrame"]')
+    driver.switch_to.frame('workspaceFrame')
     wait_for_element_to_load(driver, '//*[@id="workspaceBodyFrame"]')
     driver.switch_to.frame('workspaceBodyFrame')
 
-    double_click(driver, xpath_public_folders) # can't find this element
+    double_click(driver, xpath_public_folders)
+    double_click(driver, xpath_renewi_folder)
+    click(driver, xpath_next_page)
+    double_click(driver, xpath_overzicht_vloot_banden)
 
-    # double_click(driver, xpath_renewi_folder)
-    # click(driver, xpath_next_page)
-    # double_click(driver, xpath_overzicht_vloot_banden)
-    # click(driver, xpath_run_query)
-    # click(driver, xpath_save_as_excel2007)
+    wait_for_element_to_load(driver, '//*[@id="webiViewFrame"]')
+    driver.switch_to.frame('webiViewFrame')
+
+    click(driver, xpath_run_query)
+    click(driver, xpath_document_actions)
+    click(driver, xpath_save_to_computer_as)
+    click(driver, xpath_save_as_excel)
 
 
 def main():
     login_url = 'http://bonew.qteam.be/InfoViewApp/logon.jsp'
-    username = 'RENEWI'
-    password = 'not_my_password'
+    with open('config.json') as config:
+        data = json.load(config)
+        username = data['username']
+        password = data['password']
     
     driver = open_driver(login_url)
-
     # Select the frame where the login box is in
     wait_for_element_to_load(driver, '//*[@id="infoView_home"]')
     driver.switch_to.frame('infoView_home')
@@ -128,6 +151,8 @@ def main():
     login(driver, username, password)
 
     download_excel(driver)
+
+    driver.quit()
 
 if __name__ == '__main__':
     main()

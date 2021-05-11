@@ -46,7 +46,7 @@ def login(driver: WebDriver, username: str, password: str):
     driver.find_element_by_xpath(xpath_username_field).send_keys(username)
     driver.find_element_by_xpath(xpath_password_field).clear()
     driver.find_element_by_xpath(xpath_password_field).send_keys(password)
-    driver.find_element_by_xpath(xpath_enter_button).click()
+    click(driver, xpath_enter_button)
 
 def click(driver: WebDriver, xpath: str):
     """Click on the element with the given xpath when this element is loaded
@@ -56,6 +56,8 @@ def click(driver: WebDriver, xpath: str):
         xpath (str): xpath of element that needs to be clicked on
     """
     wait_for_element_to_load(driver, xpath)
+    print('click', xpath)
+    time.sleep(2)
     driver.find_element_by_xpath(xpath).click()
 
 def double_click(driver: WebDriver, xpath: str):
@@ -66,9 +68,11 @@ def double_click(driver: WebDriver, xpath: str):
         xpath (str): xpath of element that needs to be clicked on
     """
     wait_for_element_to_load(driver, xpath)
+    print('doubleclick', xpath)
     source = driver.find_element_by_xpath(xpath)
     action = ActionChains(driver)
-    action.double_click(source)
+    time.sleep(2)
+    action.double_click(source).perform()
 
 def download_excel(driver: WebDriver):
     """Navigate to the excel file and download it
@@ -78,6 +82,8 @@ def download_excel(driver: WebDriver):
     """
 
     xpath_document_list = '//*[@id="IconImg_Txt_btnListing"]'
+    xpath_public_folders = '//*[@id="ListingURE_listColumn_0_0_0"]'
+    xpath_renewi_folder = '//*[@id="ListingURE_listColumn_0_0_1"]'
     xpath_next_page = '//*[@id="IconImg_ListingURE_goForwardButton"]'
     xpath_overzicht_vloot_banden = '//*[@id="ListingURE_listColumn_0_0_1"]'
     xpath_run_query = '//*[@id="theBttnpromptsOKButton"]'
@@ -91,10 +97,17 @@ def download_excel(driver: WebDriver):
     driver.switch_to.frame('headerPlusFrame')
 
     click(driver, xpath_document_list)
-    double_click(driver, xpath_next_page) # not working
-    click(driver, xpath_overzicht_vloot_banden)
-    click(driver, xpath_run_query)
-    click(driver, xpath_save_as_excel2007)
+
+    wait_for_element_to_load(driver, '//*[@id="workspaceBodyFrame"]')
+    driver.switch_to.frame('workspaceBodyFrame')
+
+    double_click(driver, xpath_public_folders) # can't find this element
+
+    # double_click(driver, xpath_renewi_folder)
+    # click(driver, xpath_next_page)
+    # double_click(driver, xpath_overzicht_vloot_banden)
+    # click(driver, xpath_run_query)
+    # click(driver, xpath_save_as_excel2007)
 
 
 def main():

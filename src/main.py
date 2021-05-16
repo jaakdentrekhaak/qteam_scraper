@@ -25,7 +25,7 @@ def open_driver(url: str):
     profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/vnd.ms-excel")
 
 
-    driver = webdriver.Firefox(executable_path='../bin/linux/geckodriver', options=options, firefox_profile=profile)
+    driver = webdriver.Firefox(executable_path='geckodriver', options=options, firefox_profile=profile)
     driver.get(url)
 
     return driver
@@ -151,6 +151,8 @@ def main():
     login(driver, username, password)
 
     download_excel(driver)
+
+    # TODO: upload file to NAS server via API request (see nas_api.py)
 
 if __name__ == '__main__':
     main()

@@ -25,7 +25,7 @@ def open_driver(url: str):
     profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/vnd.ms-excel")
 
 
-    driver = webdriver.Firefox(executable_path='/lib/geckodriver-v0.27.0-linux64/geckodriver', options=options, firefox_profile=profile)
+    driver = webdriver.Firefox(executable_path='../bin/linux/geckodriver', options=options, firefox_profile=profile)
     driver.get(url)
 
     return driver
@@ -151,8 +151,6 @@ def main():
     login(driver, username, password)
 
     download_excel(driver)
-
-    driver.quit()
 
 if __name__ == '__main__':
     main()

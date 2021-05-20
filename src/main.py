@@ -1,5 +1,6 @@
 import time
 import json
+import os
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.webdriver import WebDriver
@@ -133,11 +134,14 @@ def download_excel(driver: WebDriver):
 
 
 def main():
+    # Path of directory where this file is in
+    file_dir = os.path.dirname(os.path.realpath(__file__))
+
     login_url = 'http://bonew.qteam.be/InfoViewApp/logon.jsp'
-    with open('config.json') as config:
+    with open(f'{file_dir}/config.json') as config:
         data = json.load(config)
-        username = data['username']
-        password = data['password']
+        username = data['qteam']['username']
+        password = data['qteam']['password']
     
     driver = open_driver(login_url)
     # Select the frame where the login box is in

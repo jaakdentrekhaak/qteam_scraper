@@ -55,6 +55,7 @@ response = session.get(file_url, cookies=cookie_dict)
 # (cookies copied from request on website itself)
 # (values removed for pushing to Github)
 # The only necessary cookie is the JSESSIONID! (found through testing)
+
 """
 >>> import requests
 >>> file_url = 'http://bonew.qteam.be/AnalyticalReporting/viewers/cdz_adv/downloadPDForXLS.jsp?iViewerID=1&sEntry=we00020000aad681e98955&iReport=0&sPageMode=QuickDisplay&sReportMode=Analysis&iPage=1&zoom=100&isInteractive=false&iFoldPanel=0&doctype=wid&viewType=O&saveReport=N'
@@ -67,5 +68,18 @@ response = session.get(file_url, cookies=cookie_dict)
 200
 """
 
-# The problem probably is that the JSESSIONID received at login is not the sid needed to ask for the file
-# Strange thing is that you don't get sid at login in response and you send a sid in the first login post
+# PROBLEM:
+# file_url is DYNAMIC:
+# http://bonew.qteam.be/AnalyticalReporting/viewers/cdz_adv/downloadPDForXLS.jsp?iViewerID=1&sEntry=we0002000099ef567a6ad0&iReport=0&sPageMode=QuickDisplay&sReportMode=Analysis&iPage=1&zoom=100&isInteractive=false&iFoldPanel=0&doctype=wid&viewType=O&saveReport=N
+# http://bonew.qteam.be/AnalyticalReporting/viewers/cdz_adv/downloadPDForXLS.jsp?iViewerID=1&sEntry=we00020000aad681e98955&iReport=0&sPageMode=QuickDisplay&sReportMode=Analysis&iPage=1&zoom=100&isInteractive=false&iFoldPanel=0&doctype=wid&viewType=O&saveReport=N
+# sEntry is different for the links
+# NOTE: it works if you use the link with the correct sEntry
+
+# The sEntry for the file_url can be found in the HTML response of processPrompts.jsp -> pp.Report.location (current sEntry for processPrompts: we0001000062b63ba9577b)
+# The new problem is that processPrompts needs an sEntry itself
+# The sEntry for processPrompts can be found in refreshDocument.jsp HTML response -> strEntry (current sEntry for refreshDocument: we0000000097e61511dfbe)
+# The new problem is that refreshDocument.jsp needs an sEntry itself
+# (The sEntry for refreshDocument is also needed in viewReport.jsp)
+# (The sEntry for refreshDocument is also needed in report.jsp)
+# The sEntry for refreshDocument can be found in viewDocument.jsp HTML response -> strEntry (current sEntry for refreshDocument: we0000000097e61511dfbe)
+# Hopefully the id needed in the link of viewDocument.jsp is static (same id as used in WebiView.do, retrieved from ajaxRequest json)

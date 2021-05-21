@@ -5,3 +5,4 @@ src/__pycache__/nas_api.cpython-38.pyc
 src/__pycache__/scraper.cpython-38.pyc
 src/requests.txt
 src/attempts.txt
+src/get_s_entry.txt

@@ -1,3 +1,5 @@
 geckodriver.log
 config.json
 data
+src/__pycache__/nas_api.cpython-38.pyc
+src/__pycache__/scraper.cpython-38.pyc

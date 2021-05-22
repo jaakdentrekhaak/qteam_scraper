@@ -1,5 +1,6 @@
 ###
 # NOT USED ANYMORE (replaced by scraper_requests, 100 times faster)
+# So this file is OUTDATED
 ###
 
 ###

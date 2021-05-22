@@ -3,28 +3,27 @@ import json
 import os
 
 
-def upload_file(file_path, nas_url, upload_path, upload_version, sid, dest_path, create_parents=False, overwrite=False):
+def upload_file(payload, file_name, nas_url, upload_path, upload_version, sid, dest_path, create_parents=False, overwrite=False):
     session = requests.session()
 
-    with open(file_path, 'rb') as payload:
-        url = f'{nas_url}/webapi/{upload_path}?api=SYNO.FileStation.Upload&version={upload_version}&method=upload&_sid={sid}'
-        
-        args = {
-            'path': dest_path,
-            'create_parents': create_parents,
-            'overwrite': overwrite,
-        }
+    url = f'{nas_url}/webapi/{upload_path}?api=SYNO.FileStation.Upload&version={upload_version}&method=upload&_sid={sid}'
+    
+    args = {
+        'path': dest_path,
+        'create_parents': create_parents,
+        'overwrite': overwrite,
+    }
 
-        files = {
-            'file': (os.path.basename(file_path), payload, 'application/octet-stream')
-        }
+    files = {
+        'file': (file_name, payload, 'application/octet-stream')
+    }
 
-        r = session.post(url, data=args, files=files, verify=False)
+    r = session.post(url, data=args, files=files, verify=False)
 
-        print(r.status_code, r.content)
+    print('[NAS] status code', r.status_code)
 
 
-def main(file_path, dest_path):
+def main(payload, file_name, dest_path):
     # Path of directory where this file is in
     file_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -47,6 +46,6 @@ def main(file_path, dest_path):
     login_response = requests.get(login_url).json()
     sid = login_response['data']['sid']
 
-    upload_file(file_path, nas_url, upload_path, upload_version, sid, dest_path)
+    upload_file(payload, file_name, nas_url, upload_path, upload_version, sid, dest_path)
 
-    print(f'[NAS] {file_path} saved to NAS')
+    print(f'[NAS] {file_name} saved to NAS')

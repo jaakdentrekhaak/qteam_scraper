@@ -80,9 +80,7 @@ def download(session, s_entry):
 	download_url = f'http://bonew.qteam.be/AnalyticalReporting/viewers/cdz_adv/downloadPDForXLS.jsp?iViewerID=1&sEntry={s_entry}&iReport=0&sPageMode=QuickDisplay&sReportMode=Analysis&iPage=1&zoom=100&isInteractive=false&iFoldPanel=0&doctype=wid&viewType=O&saveReport=N'
 	response = session.get(download_url)
 
-	file_dir = os.path.dirname(os.path.realpath(__file__))
-	with open(f'{file_dir}/../data/overzicht_vloot_banden.xls', 'wb') as file:
-		file.write(response.content)
+	return response.content
 
 
 def main():
@@ -96,8 +94,8 @@ def main():
 	# This sEntry can be found in the HTML response of previous requests
 	s_entry = get_s_entry(session)
 
-	download(session, s_entry)
+	payload = download(session, s_entry)
 
+	print('[SCRAPER] Excel file downloaded')
 
-if __name__ == '__main__':
-	main()
+	return payload

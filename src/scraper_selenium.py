@@ -1,3 +1,11 @@
+###
+# NOT USED ANYMORE (replaced by scraper_requests, 100 times faster)
+###
+
+###
+# Download an Excel file by using Selenium webdriver
+###
+
 import time
 import json
 import os
@@ -157,3 +165,6 @@ def main():
     download_excel(driver)
 
     print('[SCRAPER] Excel file downloaded')
+
+if __name__ == '__main__':
+    main()

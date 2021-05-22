@@ -1,4 +1,4 @@
-from scraper import main as scraper_main
+from scraper_requests import main as scraper_main
 from nas_api import main as nas_main
 import os
 from datetime import datetime
@@ -13,11 +13,11 @@ data_path = f'{os.path.dirname(os.path.realpath(__file__))}/../data/'
 
 # Wait for file to be recognized by os
 it = 0
-while it < 5 and len(os.listdir(data_path)) == 0 :
-    time.sleep(1)
+while it < 10 and len(os.listdir(data_path)) == 0 :
+    time.sleep(0.5)
     it += 1
 
-if it == 5:
+if it == 10:
     print('Downloaded file not found')
     exit()
 

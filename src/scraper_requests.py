@@ -6,6 +6,7 @@ import os
 import requests
 import json
 
+
 def login(session):
 	login_url = 'http://bonew.qteam.be/PlatformServices/service/app/logon.object'
 	file_dir = os.path.dirname(os.path.realpath(__file__))

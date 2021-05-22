@@ -1,8 +1,7 @@
 from scraper_requests import main as scraper_main
 from nas_api import main as nas_main
-import os
 from datetime import datetime
-import time
+
 
 ## Download the excel file from Qteam website to data folder
 payload = scraper_main()

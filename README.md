@@ -4,6 +4,8 @@ Author: Jens Putzeys
 This program scrapes a website (Qteam) for an Excel file with information about tires.  
 Then it uploads this Excel file to a Synology NAS server.  
 
+This program now runs scheduled on Python on my NAS server.
+
 NOTE: I made this project and decided to upload it to Github. This is not meant to be used by anyone, but you can get ideas from this.
 
 # How to use

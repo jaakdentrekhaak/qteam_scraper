@@ -6,7 +6,7 @@ Then it uploads this Excel file to a Synology NAS server.
 
 This program now runs scheduled on Python on my NAS server.
 
-NOTE: I made this project and decided to upload it to Github. This is not meant to be used by anyone, but you can get ideas from this.
+NOTE: I made this project and decided to upload it to Github. This is not meant to be used by anyone.
 
 # How to use
 Create a config.json file in the src-folder like this:  
